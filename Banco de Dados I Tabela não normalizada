@@ -1,0 +1,21 @@
+
+Tabela não normalizada
+ Proj (CodProj, tipo, descr, CodEmpregado, Nome, Categoria, Salario, DataInicial, 
+TempoAlocado)
+
+ Tabela Não Normalizada: 
+Projeto (CodProj, tipo, descr, CodEmp, Nome, Cat, Sal, DataIni, TempoAl) 
+Tabela na primeira forma normal-1FN: 
+Proj (CodProj, Tipo, Descr,
+ ProjEmp (CodProj, CodEmp, Nome, Cat, Sal, DataIni, TempoAl))
+
+ Tabela na segunda forma normal-2FN:
+ Proj (CodProj, tipo, descr) 
+ProjEmp (CodProj, CodEmp, DataIni, TempoAl) 
+Emp (CodEmp, Nome, Cat, Sal) 
+
+Tabela na terceira forma normal-3FN: 
+Proj (CodProj, tipo, descr)
+ ProjEmp (CodProj, CodEmp, DataIni, TempoAl)
+ Emp (CodEmp, Nome, Cat) 
+Categoria (Cat, Sal)
