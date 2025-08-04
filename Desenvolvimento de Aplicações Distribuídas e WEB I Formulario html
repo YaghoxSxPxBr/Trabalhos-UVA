@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+ <head>
+ <title> Av1 Formulario HTML </title>
+ <meta charset="utf-8"> 
+ </head>
+
+ <body>
+  <h1> Bem vindo</h1> 
+  <h2> Por favor preencha o formulário abaixo</h2><br />
+
+<form action="????" method="post">
+
+<!-- DADOS PESSOAIS-->
+<fieldset>
+ <legend>Dados Pessoais</legend>
+ <table cellspacing="10">
+
+  <tr>
+   <td>
+    <label for="nome"> Nome: </label>
+	  <td align="left">
+	<input type "radio" id="nome" placeholder="yago Soares Pereira">
+	</td>
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="start"> Data de Nascimento: </label>
+   </td>
+   <td align="left">
+    <input type="date" id="start" value="08-06-2023  min="01-01-1800" max="09-06-2023"> 
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="rg"> RG: </label>
+   </td>
+   <td align="left">
+    <input type="text" id="rg" size="13" maxlength="13"placeholder="1234567891012"> 
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="cpf""cpf2"> CPF:</label>
+   </td>
+   <td align="left">
+    <input type="text" id="cpf" size="9" maxlength="9" placeholder="123456789> 
+	- <input type="text" id="cpf2" size="2" maxlength="2" placeholder="12">
+   </td>
+  </tr>
+    <!-- ----------------------------------------------------------------- -->  
+	<tr>
+   <td>
+    <label for="cor"> Sua cor preferida:</label>
+   </td>
+   <td align="left">
+    <input type="color" id="cor" value="#0000FF">
+   </td>
+  </tr>
+    <!-- ----------------------------------------------------------------- -->
+	<tr>
+	<td>
+    <label for="sexo"> Seu genero:</label>
+	</td>
+   <td align="left">
+    <select id="sexo"> 
+    <option value="M" type="radio"  id="sexo">masculino</option> 
+    <option value="F">feminino</option> 
+    <option value="Outro">Outro</option> 
+	 </select>
+   </td>
+  </tr>
+    <!-- ----------------------------------------------------------------- -->
+	 <tr>
+	<td>
+    <label for="Familia"> Vive com a familia?:</label>
+	</td>
+   <td align="left">
+    <select id="Familia"> 
+    <option value="s1" type="radio"  id="Familia">sim</option> 
+    <option value="n1">não</option> 
+	 </select>
+   </td>
+  </tr>
+    <!-- ----------------------------------------------------------------- -->
+	  <!-- ----------------------------------------------------------------- -->
+ </table>
+</fieldset>
+
+<!-- ENDEREÇO -->
+<fieldset>
+ <legend>Dados de Endereço</legend>
+ <table cellspacing="10">
+  <tr>
+   <td>
+    <label for="rua"> Rua:</label>
+   </td>
+   <td align="left">
+    <input type="text " id="rua" placeholder="Rua Getúlio vargas">
+   </td>
+    <!-- ----------------------------------------------------------------- -->
+   <td>
+    <label for="numero">Numero:</label>
+   </td>
+   <td align="left">
+    <input type="text" id="numero" size="4" placeholder="1015">
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="bairro">Bairro: </label>
+   </td>
+   <td align="left">
+    <input type="text" id="bairro" placeholder="meier">
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="estado">Estado:</label>
+   </td>
+   <td align="left">
+    <select id="estado"> 
+    <option value="ac" type="radio"  id="estado">Acre</option> 
+    <option value="al">Alagoas</option> 
+    <option value="am">Amazonas</option> 
+    <option value="ap">Amapá</option> 
+    <option value="ba">Bahia</option> 
+    <option value="ce">Ceará</option> 
+    <option value="df">Distrito Federal</option> 
+    <option value="es">Espírito Santo</option> 
+    <option value="go">Goiás</option> 
+    <option value="ma">Maranhão</option> 
+    <option value="mt">Mato Grosso</option> 
+    <option value="ms">Mato Grosso do Sul</option> 
+    <option value="mg">Minas Gerais</option> 
+    <option value="pa">Pará</option> 
+    <option value="pb">Paraíba</option> 
+    <option value="pr">Paraná</option> 
+    <option value="pe">Pernambuco</option> 
+    <option value="pi">Piauí</option> 
+    <option value="rj">Rio de Janeiro</option> 
+    <option value="rn">Rio Grande do Norte</option> 
+    <option value="ro">Rondônia</option> 
+    <option value="rs">Rio Grande do Sul</option> 
+    <option value="rr">Roraima</option> 
+    <option value="sc">Santa Catarina</option> 
+    <option value="se">Sergipe</option> 
+    <option value="sp">São Paulo</option> 
+    <option value="to">Tocantins</option> 
+   </select>
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="cidade">Cidade: </label>
+   </td>
+   <td align="left">
+    <input type="text" id="cidade"placeholder="Rio de Janeiro">
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="cep">CEP: </label>
+   </td>
+   <td align="left">
+    <input type="text" id="cep" size="5" maxlength="5" placeholder="12345"> 
+	- <input type="text" name="cep2" size="3" maxlength="3" placeholder="123">
+   </td>
+  </tr>
+    <!-- ----------------------------------------------------------------- -->
+   <tr>
+   <td>
+    <label for="ddd">Numero de celular</label>
+	 <td align="left">
+    <input type="text" id="ddd" size="2" maxlength="3" placeholder="021"> 
+   <input type="text" name="numero" size="10" maxlength="10" placeholder="222222222"> 
+       </td>
+    <!-- ----------------------------------------------------------------- -->
+	  <!-- ----------------------------------------------------------------- -->
+ </table>
+</fieldset>
+<br />
+
+<!-- DADOS DE LOGIN -->
+<fieldset>
+ <legend>login</legend>
+ <table cellspacing="10">
+  <tr>
+   <td>
+    <label for="email">E-mail: </label>
+   </td>
+   <td align="left">
+    <input type="text" id="email"placeholder="exemplo@gmail.com">
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="imagem">Imagem de perfil:</label>
+   </td>
+   <td>
+    <input type="file" id="imagem" >
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="login">Usuario: </label>
+   </td>
+   <td align="left">
+    <input type="text" id="login" placeholder="yago123">
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="pass">Senha: </label>
+   </td>
+   <td align="left">
+    <input type="password" id="pass" placeholder="*******">
+   </td>
+  </tr>
+   <!-- ----------------------------------------------------------------- -->
+  <tr>
+   <td>
+    <label for="passconfirm">Confirme a senha: </label>
+   </td>
+   <td align="left">
+    <input type="password" id="passconfirm" placeholder="*******">
+
+   </td>
+  </tr>
+  
+    <!-- ----------------------------------------------------------------- -->
+	<tr>
+	<td>
+    <label for="ro"> Verificaçao:</label>
+	</td>
+   <td align="left">
+   <input type="checkbox" id="ro" name="ro">
+	<label for="1"> eu nao sou um robo </label>
+	 </select>
+   </td>
+  </tr>
+    <!-- ----------------------------------------------------------------- -->
+	  <!-- ----------------------------------------------------------------- -->
+ </table>
+</fieldset>
+
+
+<fieldset>
+<legend>Deixe sua opiniao sobre o </legend>
+ <table cellspacing="10">
+ 
+    <tr>
+    <td>
+    <label for="avalie">Avalie esse Formulario. 
+	Por favor marque apenaz um: </label>
+	
+	<td align="left">
+	<input type="checkbox" id="avalie" name="1">
+	<label for="1"> 1 </label>
+		<input type="checkbox" id="2" name="2">
+	<label for="2"> 2 </label>
+		<input type="checkbox" id="3" name="3">
+	<label for="3"> 3 </label>
+		<input type="checkbox" id="4" name="4">
+	<label for="4"> 4 </label>
+		<input type="checkbox" id="5" name="5">
+	<label for="5"> 5 </label>
+		<input type="checkbox" id="6" name="6">
+	<label for="6"> 6 </label>
+		<input type="checkbox" id="7" name="7">
+	<label for="7"> 7 </label>
+		<input type="checkbox" id="8" name="8">
+	<label for="8"> 8 </label>
+		<input type="checkbox" id="9" name="9">
+	<label for="9"> 9 </label>
+		<input type="checkbox" id="10" name="10">
+	<label for="10"> 10 </label>
+	</td>
+   </td>
+     <!-- ---------------------eu sei que o certo seria botao para selecionar 1 so mas o trabalho pede check---------------------------------------- -->
+	     <!-- -------------------e alem disso da pra resover isso com funçao depois---------------------------------------------- -->
+ <tr>
+   <td>
+  <label for="deixe">Deixe sua sugestão </label>
+   </td>
+   <td align="left">
+    <textarea id="deixe"  
+	rows="3" cols="70" placeholder="Sugestões.....">
+	</textarea>
+   </td>
+  </tr>
+  
+  </table>
+</fieldset>
+
+
+<input type="submit">
+<input type="reset" value="Limpar">
+</form>
+
+ </body>
+</html>
+
+ 
