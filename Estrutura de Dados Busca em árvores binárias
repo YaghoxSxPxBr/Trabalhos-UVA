@@ -1,0 +1,180 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <conio.h>
+ #include <locale.h>
+ struct V{};
+ struct No{
+ int numero;
+ struct V x;
+ struct No *esquerda;
+ struct No *direita;
+ };
+ typedef struct No No;
+ void criarArvore(No **pRaiz)
+ {
+ *pRaiz = NULL;
+ }
+ void inserir(No **pRaiz, int numero, struct V x){
+ if(*pRaiz == NULL){
+ *pRaiz = (No *) malloc(sizeof(No));
+ (*pRaiz)->esquerda = NULL;
+ (*pRaiz)->direita = NULL;
+ (*pRaiz)->numero = numero;
+ (*pRaiz)->x = x;
+ }
+ else{
+ if(numero < (*pRaiz)→numero)
+ inserir(&(*pRaiz)->esquerda, numero, x);
+ if(numero > (*pRaiz)→numero)
+inserir(&(*pRaiz)->direita, numero, x);
+ }
+ }
+ No *MaiorDireita(No **no)
+ {
+ if((*no)->direita != NULL)
+ return MaiorDireita(&(*no)→direita);
+ eles
+ {
+ No *aux = *no;
+ if((*no)->esquerda != NULL) 
+*no = (*no)→esquerda;
+ eles
+ *no = NULL;
+ return aux;
+ }
+ }
+ No *MenorEsquerda(No **no)
+ {
+ if((*no)->esquerda != NULL)
+ return MenorEsquerda(&(*no)→esquerda);
+ eles
+ {
+ No *aux = *no;
+ if((*no)->direita != NULL) 
+*no = (*no)→direita;
+ eles
+ *no = NULL;
+ return aux;
+ }
+ }
+ void remover(No **pRaiz, int numero)
+ {
+ if(*pRaiz == NULL)
+ {
+ printf("\nNúmero não existe na árvore!\n");
+ return;
+ }
+if(numero < (*pRaiz)→numero)
+ remover(&(*pRaiz)->esquerda, numero);
+ else
+ if(numero > (*pRaiz)→numero)
+ remover(&(*pRaiz)->direita, numero);
+ else
+ { 
+No *pAux = *pRaiz; 
+if (((*pRaiz)->esquerda == NULL) && ((*pRaiz)->direita == NULL))
+ { 
+free(pAux);
+ printf("\nRemovido com Sucesso! \n");
+ (*pRaiz) = NULL;
+ }
+ else
+ {
+ if ((*pRaiz)->esquerda == NULL)
+ {
+ (*pRaiz) = (*pRaiz)→direita;
+ pAux->direita = NULL;
+ free(pAux); pAux = NULL;
+ printf("\nRemovido com Sucesso! \n");
+ }
+ else
+ { 
+if ((*pRaiz)->direita == NULL)
+ {
+ (*pRaiz) = (*pRaiz)→esquerda;
+ pAux->esquerda = NULL;
+ free(pAux); pAux = NULL;
+ printf("\nRemovido com Sucesso! \n");
+ }
+ else
+ {
+ pAux = MaiorDireita(&(*pRaiz)->esquerda); 
+pAux->esquerda = (*pRaiz)→esquerda;
+ pAux->direita = (*pRaiz)→direita;
+ (*pRaiz)->esquerda = (*pRaiz)->direita = NULL;
+ free((*pRaiz)); *pRaiz = pAux; pAux = NULL;
+ printf("\nRemovido com Sucesso! \n");
+ }
+ }
+ }
+ }
+ }
+void exibirPreOrdem(No **pRaiz){
+ if((*pRaiz) != NULL)
+ {
+ printf("%i\n", (*pRaiz)→numero);
+ exibirPreOrdem(&(*pRaiz)→esquerda);
+ exibirPreOrdem(&(*pRaiz)→direita);
+ }
+ }
+ void exibirEmOrdem(No **pRaiz){
+ if((*pRaiz) != NULL)
+ {
+ exibirEmOrdem(&(*pRaiz)→esquerda);
+ printf("%i\n", (*pRaiz)→numero);
+ exibirEmOrdem(&(*pRaiz)→direita);
+ }
+ }
+ void exibirPosOrdem(No **pRaiz){
+ if((*pRaiz) != NULL)
+ {
+ exibirPosOrdem(&(*pRaiz)→esquerda);
+ exibirPosOrdem(&(*pRaiz)→direita);
+ printf("%i\n", (*pRaiz)→numero);
+ }
+ }
+ int main (){
+ struct V ca;
+ int c;
+ No *pRaiz;
+ criarArvore(&pRaiz);
+ int op;
+ do{
+ printf("\n\n       Menu\n\n");
+ printf("1. Inserir nodo: \n");
+ printf("2. Remover nodo: \n");
+ printf("3. Mostrar PRÉ-ORDEM: \n");
+ printf("4. Mostrar EM ORDEM: \n");
+ printf("5. Mostrar PÓS-ORDEM: \n");
+ printf("\nOpção [0 para Sair]: ");
+ scanf("%d", &op);
+ switch(op)
+ {
+case 1:
+ printf("\nDigite um Número Referente na Árvore: ");
+ scanf("%d",&c);
+ inserir(&pRaiz,c,ca);
+ break;
+ case 2:
+ printf("\nDigite um Número Referente na Árvore para remover: ");
+ scanf("%d",&c);
+ remover(&pRaiz,c);
+ break;
+ case 3:
+ exibirPreOrdem(&pRaiz);
+ break;
+ case 4:
+ exibirEmOrdem(&pRaiz);
+ break;
+ case 5:
+ exibirPosOrdem(&pRaiz);
+ break;
+ case 0:
+ break;
+ default:
+ printf("\n\nOpção Inválida. \n");
+ break;
+ }
+ }while(op!=0);
+ return 0;
+ }
