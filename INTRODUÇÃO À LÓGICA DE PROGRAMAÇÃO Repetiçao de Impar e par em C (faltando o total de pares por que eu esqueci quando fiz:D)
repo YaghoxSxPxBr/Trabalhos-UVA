@@ -1,0 +1,24 @@
+#include <stdio.h>
+ #include <stdlib.h>
+ int main() {
+ int inicial,final,i;
+ printf("inicial  ");
+ scanf("%d",&inicial);
+ printf("final    ");
+ scanf("%d",&final);
+ i=inicial;
+ printf("\nPares\n");
+ while (i <= final)
+ {
+  if (i % 2 == 0) { printf("%d\n", i); }
+  i++;
+ }
+ i = inicial;
+ printf("\nImpares\n");
+ while (i <= final)
+ {
+  if (i % 2 == 1) { printf("%d\n", i); }
+  i++;
+ }
+ return 0;
+ }
