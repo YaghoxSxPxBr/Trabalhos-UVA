@@ -1,0 +1,517 @@
+A persistência é um recurso muito importante no desenvolvimento de aplicativos. Saber trabalhar 
+com os diversos tipos de armazenamento permite que você desenvolva projetos mais robustos. O 
+desenvolvimento de projetos com uso de banco de dados, seja local ou remoto, é um pré-requisito
+ para o desenvolvimento de aplicativos modernos.
+ Para a concretização dos conhecimentos obtidos nesta unidade, você deve definir um objeto para 
+a criação de sua classe e desenvolver um projeto com uso de persistência de dados com uso do 
+SQLite no Android para realizar a manutenção dos diferentes registros de armazenamento, com a 
+listagem, inclusão, alteração e exclusão desses registros.
+
+
+ Classes 1:
+ Main 1.1:
+
+ package com.example.ava2ssql;
+ import android.content.Intent;
+ import android.os.Bundle;
+ import android.widget.ArrayAdapter;
+ import android.widget.Button;
+ import android.widget.ListView;
+ import android.widget.Toast;
+ import java.util.List;
+ import androidx.appcompat.app.AppCompatActivity;
+ public class MainActivity extends AppCompatActivity {
+ private ListView listViewJogos;
+ private Jogo jogoSelecionado;
+ private Button btnAdicionar,btnAlterar;
+ private JogoDAO jogoDAO;
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+ listViewJogos = findViewById(R.id.listViewJogos);
+ btnAdicionar = findViewById(R.id.buttonAtualizar);
+ btnAlterar = findViewById(R.id.btnAlterar);
+ jogoDAO = new JogoDAO(this);
+            carregarJogos();
+ btnAdicionar.setOnClickListener(view -> {
+                Intent intent = new Intent(MainActivity.this, Cadastro.class);
+                startActivity(intent);
+            });
+ listViewJogos.setOnItemClickListener((parent, view, position, id) -> {
+ jogoSelecionado = (Jogo) parent.getItemAtPosition(position);
+ if (jogoSelecionado != null) {
+ Toast.makeText(this, "Jogo selecionado: " + jogoSelecionado.getEmpresa(), 
+Toast.LENGTH_SHORT).show();
+                } 
+else {
+ Toast.makeText(this, "Erro ao selecionar o jogo.", Toast.LENGTH_SHORT).show();
+                }
+            });
+ btnAlterar.setOnClickListener(view -> {
+ if (jogoSelecionado != null) {
+                    Intent intent = new Intent(MainActivity.this, Alteracao.class);
+                    intent.putExtra("jogoId", jogoSelecionado.getId());
+                    startActivity(intent);
+                } 
+else {
+ Toast.makeText(this, "Selecione um jogo na lista antes de alterar!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+ private void carregarJogos() {
+            List<Jogo> jogos = jogoDAO.listarJogos();
+ ArrayAdapter<Jogo> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, jogos);
+ listViewJogos.setAdapter(adapter);
+        }
+ @Override
+ protected void onResume() {
+ super.onResume();
+            carregarJogos();
+ jogoSelecionado = null;
+        }
+    }
+
+ Jogo 1.2:
+
+ package com.example.ava2ssql;
+ import androidx.annotation.NonNull;
+ public class Jogo {
+ private int id;
+ private int anoLancamento;
+ private String empresa;
+ private String genero;
+ private String plataforma;
+ public Jogo() {}
+ public Jogo(int id, int anoLancamento, String empresa, String genero, String plataforma) {
+ this.id = id;
+ this.anoLancamento = anoLancamento;
+ this.empresa = empresa;
+ this.genero = genero;
+ this.plataforma = plataforma;
+    }
+ // Getters e Setters
+ public int getId() {
+ return id;
+    }
+ public void setId(int id) {
+ this.id = id;
+    }
+public int getAnoLancamento() {
+ return anoLancamento;
+    }
+ public void setAnoLancamento(int anoLancamento) {
+ this.anoLancamento = anoLancamento;
+    }
+ public String getEmpresa() {
+ return empresa;
+    }
+ public void setEmpresa(String empresa) {
+ this.empresa = empresa;
+    }
+ public String getGenero() {
+ return genero;
+    }
+ public void setGenero(String genero) {
+ this.genero = genero;
+    }
+ public String getPlataforma() {
+ return plataforma;
+    }
+ public void setPlataforma(String plataforma) {
+ this.plataforma = plataforma;
+    }
+ @NonNull
+    @Override
+ public String toString() {
+ return empresa + " - " + genero + " (" + anoLancamento + ")";
+    }
+ }
+
+ Cadastro 1.3:
+
+ package com.example.ava2ssql;
+ import android.os.Bundle;
+ import android.widget.Button;
+ import android.widget.EditText;
+ import android.widget.Toast;
+ import androidx.appcompat.app.AppCompatActivity;
+ public class Cadastro extends AppCompatActivity {
+ private EditText etAnoLancamento, etEmpresa, etGenero, etPlataforma;
+ private Button btnSalvar;
+ private JogoDAO jogoDAO;
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+        setContentView(R.layout.cadrastro);
+ etAnoLancamento = findViewById(R.id.etAnoLancamento);
+ etEmpresa = findViewById(R.id.etEmpresa);
+etGenero = findViewById(R.id.etGenero);
+ etPlataforma = findViewById(R.id.etPlataforma);
+ btnSalvar = findViewById(R.id.btnSalvar);
+ jogoDAO = new JogoDAO(this);
+ btnSalvar.setOnClickListener(view -> {
+            Jogo novoJogo = new Jogo();
+            novoJogo.setAnoLancamento(Integer.parseInt(etAnoLancamento.getText().toString()));
+            novoJogo.setEmpresa(etEmpresa.getText().toString());
+            novoJogo.setGenero(etGenero.getText().toString());
+            novoJogo.setPlataforma(etPlataforma.getText().toString());
+ long resultado = jogoDAO.inserirJogo(novoJogo);
+ if (resultado != -1) {
+ Toast.makeText(this, "Jogo adicionado com sucesso!", Toast.LENGTH_SHORT).show();
+                finish();
+            } 
+else {
+ Toast.makeText(this, "Erro ao adicionar jogo.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+ }
+
+ Alteração 1.4:
+
+ package com.example.ava2ssql;
+ import android.os.Bundle;
+ import android.widget.Button;
+ import android.widget.EditText;
+ import android.widget.Toast;
+ import java.util.List;
+ import androidx.appcompat.app.AppCompatActivity;
+ public class Alteracao extends AppCompatActivity {
+ private EditText etAnoLancamento, etEmpresa, etGenero, etPlataforma;
+ private Button btnAtualizar, btnDeletar;
+ private JogoDAO jogoDAO;
+ private int jogoId;
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+        setContentView(R.layout.alteracao);
+ etAnoLancamento = findViewById(R.id.etEditAnoLancamento);
+ etEmpresa = findViewById(R.id.etEditEmpresa);
+ etGenero = findViewById(R.id.etEditGenero);
+ etPlataforma = findViewById(R.id.etEditPlataforma);
+ btnAtualizar = findViewById(R.id.btnSalvar);
+ btnDeletar = findViewById(R.id.btnDeletar);
+ jogoDAO = new JogoDAO(this);
+ // Obtém o ID do jogo enviado via Intent
+ jogoId = getIntent().getIntExtra("jogoId", -1);
+ if (jogoId != -1) {
+            carregarDadosJogo(jogoId); // Carrega os dados no formulário
+ }
+btnAtualizar.setOnClickListener(view -> {
+            Jogo jogoAtualizado = new Jogo();
+            jogoAtualizado.setId(jogoId);
+            jogoAtualizado.setAnoLancamento(Integer.parseInt(etAnoLancamento.getText().toString()));
+            jogoAtualizado.setEmpresa(etEmpresa.getText().toString());
+            jogoAtualizado.setGenero(etGenero.getText().toString());
+            jogoAtualizado.setPlataforma(etPlataforma.getText().toString());
+ int resultado = jogoDAO.atualizarJogo(jogoAtualizado);
+ if (resultado > 0) {
+ Toast.makeText(this, "Jogo atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+                finish();
+            } 
+else {
+ Toast.makeText(this, "Erro ao atualizar o jogo.", Toast.LENGTH_SHORT).show();
+            }
+        });
+ btnDeletar.setOnClickListener(view -> {
+ int resultado = jogoDAO.excluirJogo(jogoId);
+ if (resultado > 0) {
+ Toast.makeText(this, "Jogo excluído com sucesso!", Toast.LENGTH_SHORT).show();
+                finish();
+            } 
+else {
+ Toast.makeText(this, "Erro ao excluir o jogo.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+ private void carregarDadosJogo(int id) {
+        List<Jogo> jogos = jogoDAO.listarJogos();
+ for (Jogo jogo : jogos) {
+ if (jogo.getId() == id) {
+ etAnoLancamento.setText(String.valueOf(jogo.getAnoLancamento()));
+ etEmpresa.setText(jogo.getEmpresa());
+ etGenero.setText(jogo.getGenero());
+ etPlataforma.setText(jogo.getPlataforma());
+ break;
+            }
+        }
+    }
+ }
+
+ DAO:
+
+ package com.example.ava2ssql;
+ import android.content.ContentValues;
+ import android.content.Context;
+ import android.database.Cursor;
+ import android.database.sqlite.SQLiteDatabase;
+ import java.util.ArrayList;
+ import java.util.List;
+ public class JogoDAO {
+ private final SQLiteDatabase db;
+ public JogoDAO(Context context) {
+        JogoDatabaseHelper dbHelper = new JogoDatabaseHelper(context);
+ db = dbHelper.getWritableDatabase();
+    }
+ public long inserirJogo(Jogo jogo) {
+        ContentValues values = new ContentValues();
+        values.put("anoLancamento", jogo.getAnoLancamento());
+        values.put("empresa", jogo.getEmpresa());
+        values.put("genero", jogo.getGenero());
+        values.put("plataforma", jogo.getPlataforma());
+ return db.insert("tabela", null, values);
+    }
+ public int atualizarJogo(Jogo jogo) {
+        ContentValues values = new ContentValues();
+        values.put("anoLancamento", jogo.getAnoLancamento());
+        values.put("empresa", jogo.getEmpresa());
+        values.put("genero", jogo.getGenero());
+        values.put("plataforma", jogo.getPlataforma());
+ return db.update("tabela", values, "id = ?", new String[]{String.valueOf(jogo.getId())});
+    }
+ public int excluirJogo(int id) {
+ return db.delete("tabela", "id = ?", new String[]{String.valueOf(id)});
+    }
+ public List<Jogo> listarJogos() {
+        List<Jogo> lista = new ArrayList<>();
+        Cursor cursor = db.query("tabela", null, null, null, null, null, "id ASC");
+ while (cursor.moveToNext()) {
+            Jogo jogo = new Jogo();
+            jogo.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+            jogo.setAnoLancamento(cursor.getInt(cursor.getColumnIndexOrThrow("anoLancamento")));
+            jogo.setEmpresa(cursor.getString(cursor.getColumnIndexOrThrow("empresa")));
+            jogo.setGenero(cursor.getString(cursor.getColumnIndexOrThrow("genero")));
+            jogo.setPlataforma(cursor.getString(cursor.getColumnIndexOrThrow("plataforma")));
+            lista.add(jogo);
+        }
+        cursor.close();
+ return lista;
+    }
+ public void close() {
+ db.close();
+    }
+ }
+
+ SQLiteDataBaseHelper:
+
+ package com.example.ava2ssql;
+ import android.content.Context;
+ import android.database.sqlite.SQLiteDatabase;
+ import android.database.sqlite.SQLiteOpenHelper;
+ public class JogoDatabaseHelper extends SQLiteOpenHelper {
+ private static final String DATABASE_NAME = "jogos.db";
+ private static final int DATABASE_VERSION = 1;
+ // Comando SQL
+ private static final String TABLE_CREATE =
+ "CREA
+ TE TABLE tabela (" +
+"id INTEGER PRIMAR
+ Y KEY AUTOINCREMENT, " +
+ "anoLancamento INTEGER, " +
+ "empresa 
+TEXT, " +
+ "genero 
+TEXT, " +
+ "plataforma 
+TEXT)";
+ public JogoDatabaseHelper(Context context) {
+ super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+ @Override
+ public void onCreate(SQLiteDatabase db) {
+        db.execSQL(TABLE_CREATE);
+    }
+ @Override
+ public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("
+ DROP TABLE IF EXISTS tabela");
+        onCreate(db);
+    }
+ }
+
+ Manifest:
+
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:tools="http://schemas.android.com/tools"
+ package="com.example.ava2ssql">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+ android:maxSdkVersion="32"
+ tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+ android:maxSdkVersion="32" />
+    <application
+ android:allowBackup="true"
+ android:dataExtractionRules="@xml/data_extraction_rules"
+ android:fullBackupContent="@xml/backup_rules"
+ android:icon="@mipmap/ic_launcher"
+ android:label="@string/app_name"
+ android:roundIcon="@mipmap/ic_launcher_round"
+ android:supportsRtl="true"
+ android:theme="@style/Theme.Ava2sSql"
+ tools:targetApi="31">
+        <activity android:name="com.example.ava2ssql.Cadastro" />
+        <activity android:name="com.example.ava2ssql.Alteracao" />
+        <activity android:name="com.example.ava2ssql.MainActivity"
+ android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+ </manifest>
+
+Layouts 2:
+
+ Main 2.1:
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:id="@+id/main"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:orientation="vertical"
+ android:padding="16dp">
+    <TextView
+ android:id="@+id/tvTitulo"
+ android:layout_width="match_parent"
+ android:layout_height="0dp"
+ android:layout_weight="1"
+ android:text="@string/lista_de_jogos"
+ android:textSize="24sp"
+ android:textStyle="bold"
+ android:gravity="center"
+ android:layout_marginBottom="16dp" />
+    <ListView
+ android:id="@+id/listViewJogos"
+ android:layout_width="wrap_content"
+ android:layout_height="476dp"
+ android:layout_weight="1"
+ tools:layout_editor_absoluteX="16dp"
+ tools:layout_editor_absoluteY="16dp" />
+    <Button
+ android:id="@+id/buttonAtualizar"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="8dp"
+ android:text="@string/adicionar_jogo"
+ android:textSize="16sp" />
+    <Button
+ android:id="@+id/btnAlterar"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:text="@string/alterar_jogo"
+ android:textSize="16sp" />
+ </LinearLayout>
+
+ Alteração 2.2:
+
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:orientation="vertical"
+ android:padding="16dp">
+    <EditText
+android:id="@+id/etEditEmpresa"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="8dp"
+ android:layout_weight="1"
+ android:autofillHints=""
+ android:hint="@string/empresa2"
+ android:inputType="text" />
+    <EditText
+ android:id="@+id/etEditPlataforma"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="16dp"
+ android:layout_weight="1"
+ android:autofillHints=""
+ android:hint="@string/plataforma2"
+ android:inputType="text" />
+    <EditText
+ android:id="@+id/etEditGenero"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="8dp"
+ android:layout_weight="1"
+ android:autofillHints=""
+ android:hint="@string/g_nero2"
+ android:inputType="text" />
+    <EditText
+ android:id="@+id/etEditAnoLancamento"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="8dp"
+ android:layout_weight="1"
+ android:autofillHints=""
+ android:hint="@string/ano_de_lan_amento2"
+ android:inputType="number" />
+    <Button
+ android:id="@+id/btnSalvar"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:text="@string/salvar_jogo2"
+ android:textSize="16sp" />
+    <Button
+ android:id="@+id/btnDeletar"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:text="@string/excluir_jogo2"
+ android:textSize="16sp" />
+ </LinearLayou>
+
+Cadastro 2.3:
+
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:orientation="vertical"
+ android:padding="16dp">
+    <EditText
+ android:id="@+id/etAnoLancamento"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="8dp"
+ android:layout_weight="1"
+ android:autofillHints=""
+ android:hint="@string/ano_de_lan_amento"
+ android:inputType="number" />
+    <EditText
+ android:id="@+id/etEmpresa"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="8dp"
+ android:layout_weight="1"
+ android:autofillHints=""
+ android:hint="@string/empresa"
+ android:inputType="text" />
+    <EditText
+ android:id="@+id/etGenero"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="8dp"
+ android:layout_weight="1"
+ android:autofillHints=""
+ android:hint="@string/g_nero"
+ android:inputType="text" />
+    <EditText
+ android:id="@+id/etPlataforma"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="16dp"
+ android:layout_weight="1"
+ android:autofillHints=""
+ android:hint="@string/plataforma"
+ android:inputType="text" />
+    <Button
+ android:id="@+id/btnSalvar"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:text="@string/salvar_jogo"
+ android:textSize="16sp" />
+ </LinearLayout>
