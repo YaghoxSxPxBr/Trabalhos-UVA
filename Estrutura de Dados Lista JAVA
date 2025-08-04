@@ -1,0 +1,142 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <locale.h>
+ typedef struct sNodo 
+{
+ int info;
+ struct sNodo *prox;
+ } Nodo;
+ typedef struct sListaSimplesEncadeada 
+{
+ Nodo *prim;
+ } sListaSimplesEncadeada;
+ void criarLista(sListaSimplesEncadeada *pList) 
+{
+ pList->prim = NULL;
+ }
+ void mostrarLista(sListaSimplesEncadeada *pList) 
+{
+ Nodo *p;
+ printf("Lista: ");
+ for (p = pList->prim; p != NULL; p = p->prox) 
+{
+ printf("%d -> ", p->info);
+ }
+ }
+ void inserirelemeto(sListaSimplesEncadeada *pList, int v) 
+{
+ Nodo *novo;
+ novo = (Nodo*)malloc(sizeof(Nodo));
+ if (novo != NULL) 
+{
+ novo->info = v;
+ novo->prox = pList->prim;
+ pList->prim = novo;
+ }
+else 
+{
+ printf("Memória Insuficiente\n");
+ }
+ }
+ void removerElemeto(sListaSimplesEncadeada *pList, int v) 
+{
+ Nodo *pAtu, *pAnt;
+ pAnt = NULL;
+ pAtu = pList->prim;
+ while (pAtu != NULL && pAtu->info != v) 
+{
+ pAnt = pAtu;
+ pAtu = pAtu->prox;
+ }
+ if (pAnt != NULL) 
+{
+ if (pAtu != NULL) {
+ pAnt->prox = pAtu->prox;
+ free(pAtu);
+ printf("Valor Removido com sucesso\n");
+ }
+ else 
+{
+ printf("Valor não encontrado\n");
+ }
+ }
+ else 
+{
+ printf("Lista Vazia\n");
+ }
+ }
+ void alterarElemeto(sListaSimplesEncadeada *pList, int v1, int v2) 
+{
+ Nodo *pAtu, *pAnt;
+ pAnt = NULL;
+ pAtu = pList->prim;
+ while (pAtu != NULL && pAtu->info != v1) 
+{
+ pAnt = pAtu;
+ pAtu = pAtu->prox;
+ }
+ if (pAnt != NULL) 
+{
+if (pAtu != NULL) 
+{
+ pAtu->info = v2;
+ printf("Valor alterado com sucesso\n");
+ }
+ else 
+{
+ printf("Valor não encontrado\n");
+ }
+ }
+ else 
+{
+ printf("Lista Vazia\n");
+ }
+ }
+ int estaVazia(sListaSimplesEncadeada *pList) {
+ return(pList->prim == NULL);
+ }
+ void main() 
+{
+ sListaSimplesEncadeada minhaLista;
+ int valor, op, v2;
+ criarLista(&minhaLista);
+ printf("Escolha uma opção:\n");
+ while (1) {
+ printf("\n(1) Inserir elemento numérico na Lista\n");
+ printf("(2) Remover elemento numérico na Lista\n");
+ printf("(3) Mostrar Lista\n");
+ printf("(4) Alterar elemento numérico da Lista\n");
+ printf("(0) Sair\n");
+ scanf("%d", &op);
+ switch (op) {
+ case 1: 
+printf("Valor? ");
+ scanf("%d", &valor);
+ inserirelemeto(&minhaLista, valor);
+ break;
+ case 2: 
+printf("Qual valor? ");
+ scanf("%d", &valor);
+ removerElemeto(&minhaLista, valor);
+ break;
+case 3: 
+if (estaVazia(&minhaLista)) {
+ printf("Lista vazia\n");
+ }
+ else {mostrarLista(&minhaLista);
+ }
+ break;
+ case 4: 
+printf("Valor a ser alterado? ");
+ scanf("%d", &valor);
+ printf("Novo valor? ");
+ scanf("%d", &v2);
+ alterarElemeto(&minhaLista, valor, v2);
+ break;
+ case 0: 
+exit(0);
+ default:
+ printf("Opção inexistente!\n");
+ }
+ }
+ }
