@@ -1,0 +1,175 @@
+Analise o procedimento para o cálculo da média de sua disciplina e crie uma 
+aplicação (app) que seja capaz de receber as notas de A1, A2 e A3 de um 
+aluno e apresentar sua média final na disciplina.
+ Um aluno precisa calcular a média obtida em uma disciplina EaD na nossa 
+instituição, mas não sabe exatamente como fazer isso. O aluno em questão 
+é um exemplo de usuário para uma aplicação que solicite as notas de A1, A2 
+e A3 e apresente sua média.
+
+ Procedimentos:
+ Manifest XML
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.calculadora">
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Calculadora">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ResultActivity" />
+    </application>
+ </manifest>
+
+ Classes Main e Resultado
+ package com.example.calculadora;
+ import android.content.Intent;
+ import android.os.Bundle;
+ import android.widget.Button;
+ import android.widget.EditText;
+ import androidx.appcompat.app.AppCompatActivity;
+ public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        // Referencia input
+        EditText AV1Field = findViewById(R.id.AV1);
+        EditText AV2Field = findViewById(R.id.AV2);
+        EditText AV3Field = findViewById(R.id.AV3);
+        Button calculateButton = findViewById(R.id.calculateButton);
+        calculateButton.setOnClickListener(view -> {
+            int AV1 = parseInput(AV1Field);
+            int AV2 = parseInput(AV2Field);
+            int AV3 = parseInput(AV3Field);
+            Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+            // Valores do Resultado
+            intent.putExtra("AV1", AV1);
+            intent.putExtra("AV2", AV2);
+            intent.putExtra("AV3", AV3);
+            startActivity(intent);
+        });
+    }
+    private int parseInput(EditText editText) {
+        String input = editText.getText().toString();
+        return input.isEmpty() ? 0 : Integer.parseInt(input);
+    }
+ }
+ package com.example.calculadora;
+ import android.os.Bundle;
+ import android.widget.TextView;
+ import androidx.appcompat.app.AppCompatActivity;
+ import java.util.Arrays;
+ public class ResultActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_result);
+        TextView resultText = findViewById(R.id.resultText);
+        TextView statusText = findViewById(R.id.statusText);
+        int AV1 = getIntent().getIntExtra("AV1", 0);
+        int AV2 = getIntent().getIntExtra("AV2", 0);
+        int AV3 = getIntent().getIntExtra("AV3", 0);
+        int[] numbers = {AV1, AV2};
+        int minNumber = Arrays.stream(numbers).min().orElse(0);
+        int maxNumber = Arrays.stream(numbers).max().orElse(0);
+        int[] adjustedNumbers = AV3 > minNumber ? new int[]{maxNumber, AV3} : numbers;
+        double average = Arrays.stream(adjustedNumbers).average().orElse(0);
+        String status = average >= 7 ? "Passou" : "Falhou";
+        resultText.setText(String.format("A média é: %.2f", average));
+        statusText.setText(status);
+        int statusColor = status.equals("Passou") ? android.R.color.holo_green_dark : android.R.color.holo_red_dark;
+        statusText.setTextColor(getResources().getColor(statusColor));  
+ }
+ }
+
+
+Layout XML Main e Resultado
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:app="http://schemas.android.com/apk/res-auto"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:orientation="vertical"
+ android:padding="16dp">
+    <EditText
+ android:id="@+id/AV1"
+ style="@android:style/Widget.EditText"
+ android:layout_width="357dp"
+ android:layout_height="70dp"
+ android:autofillHints="@string/AV1"
+ android:fontFamily="sans-serif"
+ android:inputType="number"
+ android:text="@string/AV1"
+ android:textSize="16sp"
+ android:typeface="normal" />
+    <EditText
+ android:id="@+id/AV2"
+ style="@android:style/Widget.EditText"
+ android:layout_width="357dp"
+ android:layout_height="70dp"
+ android:autofillHints="@string/AV2"
+ android:fontFamily="sans-serif"
+ android:inputType="number"
+ android:text="@string/AV2"
+ android:textSize="16sp"
+ android:typeface="normal" />
+    <EditText
+ android:id="@+id/AV3"
+ style="@android:style/Widget.EditText"
+ android:layout_width="357dp"
+ android:layout_height="70dp"
+ android:autofillHints="@string/AV3"
+ android:fontFamily="sans-serif"
+ android:inputType="number"
+ android:text="@string/AV3"
+ android:textSize="16sp"
+ android:typeface="normal" />
+    <Button
+ android:id="@+id/calculateButton"
+ style="@android:style/Widget.Button"
+ android:layout_width="357dp"
+ android:layout_height="70dp"
+ android:fontFamily="sans-serif"
+ android:lineSpacingExtra="16sp"
+ android:textSize="16sp"
+ android:typeface="normal"
+ tools:text="Calcular Média" />
+ </LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="357dp"
+        android:layout_height="70dp"
+        android:fontFamily="sans-serif"
+        android:paddingTop="16dp"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:typeface="normal"
+        tools:text="A média será exibida aqui" />
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="357dp"
+        android:layout_height="70dp"
+        android:fontFamily="sans-serif"
+        android:paddingTop="16dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="16sp"
+        android:typeface="normal"
+        tools:text="O Resultado será exibido aqui" />
+ </LinearLayout>
