@@ -1,0 +1,114 @@
+ Alocação de recursos
+ Cada um destes recursos pode estar alocado a somente um procedimento por vez. O controle do 
+acesso aos recursos é realizado por intermédio de semáforos. Como você sabe, a utilização de 
+semáforos faz com que, se um recurso estiver em uso por um procedimento, e um segundo 
+procedimento tentar alocá-lo, este segundo procedimento ficará bloqueado até que o procedimento 
+que detém o recurso o libere.
+ O procedimento “aloca_xxxxxxxxxx()” permitirá que o procedimento continue sua execução e a 
+alocará para ele se a impressora estiver disponível, caso contrário o procedimento será bloqueado 
+até que a impressora esteja disponível para alocação. Realiza a operação “down” no semáforo da 
+impressora.
+ O procedimento “libera_xxxxxxxxxxx()” faz a liberação da impressora para que possa ser utilizada 
+por outro procedimento. Caso algum procedimento esteja bloqueado aguardando pela liberação da 
+impressora, ele será desbloqueado e a impressora sela alocada para ele. Realiza a operação “up” no 
+semáforo da impressora.
+ Os procedimentos “processa_algo()” realiza um processamento qualquer.
+ Os procedimentos “processa_algo_utilizando_xxxxxxxx()” representa alguma tarefa que é realiza 
+em determinados momentos, utilizando os recursos que constam no nome no procedimento. Por 
+exemplo, “processa_algo_utilizando_scanner_impressora()” necessita tanto do scanner quanto da 
+impressora para ser executado.
+ As linhas de comando:
+ pthread_create(thread_A, Proc_A);
+ pthread_create(thread_B, Proc_B);
+  pthread_create(thread_C, Proc_C);
+ colocam os procedimentos Proc_A, Proc_B e Proc_C executando concorrentemente, cada um em 
+uma thread diferente.
+ O trabalho consiste em verificar o código abaixo procurando por problemas que possam levar ao 
+funcionamento incorreto do sistema.
+ Elabore um documento texto em formato PDF contendo:
+ IMPORTANTE: A solução não pode alterar a ordem de execução dos procedimentos 
+“processa_algo_utilizando_xxxxxxxx()”, pois isso afetaria o funcionamento do algoritmo.--------
+Algoritmo “concorrentes”
+ Var
+  // Variaveis de controle das threads
+  thread thread_A, thread_B, thread_C: thread;
+  // Semaforos de controle
+  sema_impressora, sema_plotter, sema_scanner: semaforo;
+ Procedimento Proc_A() não tem nenhum erro que eu tenha avistado exceto o problema de recursos 
+não preemptivos tendo conflito pelos programas nunca pararem causando um loop que uma hora 
+causa o deadlock.
+ Início
+ Enquanto (verdadeiro) Faça // Procedimento nunca termina                           
+         processa_algo();
+         aloca_plotter();
+         processa_algo_utilizando_plotter();
+         libera_plotter();
+  Fim Enquanto;
+ Fim;
+ Procedimento Proc_B()  Enquanto o scanner não for liberado a impressora e o plotter serão 
+bloqueados
+ Início
+ Enquanto (verdadeiro) Faça // Procedimento nunca termina                           
+         processa_algo();
+         aloca_scanner();
+ processa_algo_utilizando_scanner();
+         aloca_impressora();  
+ processa_algo_utilizando_scanner_impressora();
+         aloca_plotter();
+ processa_algo_utilizando_scanner_impressora_plotter();
+         libera_plotter();
+         libera_impressora();
+         libera_scanner();
+  Fim Enquanto;
+ Fim;
+ Procedimento Proc_C()    Na alocação da impressora e processo não é possível alocar o scanner 
+sem liberar a impressora 
+A ordem de alocação dos recursos nas threads B e C é diferente, o que pode levar a uma situação de 
+espera circular e causar deadlock.
+ Início
+ Enquanto (verdadeiro) Faça // Procedimento nunca termina                               
+    processa_algo();
+         aloca_impressora();                                    
+         processa_algo_utilizando_impressora();
+         aloca_scanner();
+ processa_algo_utilizando_scanner_impressora();
+         libera_impressora();
+         libera_scanner();
+  Fim Enquanto;
+ Fim;
+Início
+  sema_impressora = 1; // Inicia semaforo de controle da impressora
+  sema_plotter = 1; // Inicia semaforo de controle do plotter
+  sema_scanner = 1; // Inicia semaforo de controle do scanner
+  // Inicia as threads colocando-as em execução paralelamente
+  pthread_create(thread_A, Proc_A); // Inicia Proc_A como uma thread
+  pthread_create(thread_B, Proc_B); // Inicia Proc_A como uma thread
+  pthread_create(thread_C, Proc_C); // Inicia Proc_A como uma thread
+  // faz com que a thread principal espere as demais acabarem
+  pthread_join(thread_A);
+  pthread_join(thread_B);
+  pthread_join(thread_C);
+ Fim.
+Resposta
+ Todos os recursos são não preemptivos então já que todos os processos (ABC) acontecem 
+simultaneamente ocorrem um cruzamento ocasionado num deadlock já que uma hora vão todos ter 
+de esperar a liberação de um recurso que está sendo utilizado por outro sem liberar o seu próprio ate
+ ele completar o processo qual nunca vai pois o recuso vai estar preso com outro processo. 
+Pelos recursos serem não preemptivo não se pode usar preempção. Ignorar o problema tiraria o 
+propósito da atividade assim como eliminar um dos processos. Rollback funcionaria mais teria 
+muita perda por ter de parar e voltar atrás no processo.
+ Proposta de Correção:
+ Aquisição de mais recursos que evitaria a exclusão mutua
+ Modificar a lógica de alocação e liberação de recursos para garantir que os recursos sejam 
+adequadamente liberados.
+ Padronizar a ordem de alocação de recursos em todas as threads para evitar possíveis deadlocks.
+ Resolvendo o problema de alocação descrito no procedimento “c” e o padronizando fara com que o 
+procedimento “a” ir sem problema o “b” vai alocar a plotter primeiro depois que o “a” acabar ele ira
+ fazer seu processo e assim que acabar o “c” vai alocar a plotter, fazendo com que todos aloquem no 
+mesmo recurso ao mesmo tempo assim que um processo terminar o outro pega e termina seu 
+processo e vai para o próximo sem o problema de tentar pegar recursos excludentes.
+ Mas isso vai alterar a execução dos processos então eu não sei se seria valido para o trabalho.
+ Outro método seria fazer com que cada processo solicite todos os seu recursos antes de executar e 
+se um recurso ou mais estiver alocado não sera liberado nenhum outro recurso para os outros 
+processos ate o fim do que iniciou, mas haverá perda de otimização com o esse método e se fosse 
+possível a implementação seria melhor a criação de um algorítimo de banqueiro
