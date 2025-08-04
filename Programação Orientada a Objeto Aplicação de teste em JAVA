@@ -1,0 +1,165 @@
+Classes, objetos e métodos de acesso 
+Implementar uma classe modelo em Java e desenvolver uma 
+aplicação de teste para criação e uso de diferentes objetos desse 
+modelo. 
+Crie uma classe com cinco atributos para a criação de objetos do 
+tipo Computador. A classe deve possuir dois métodos 
+construtores, um sem parâmetros (construtor default) e outro com 
+os cinco parâmetros relacionados aos atributos da classe 
+Computador. Além disso, a classe deve conter os métodos de 
+acesso (setters e getters) para cada atributo e um método de 
+exibição de todos os atributos denominado imprimir. 
+Crie uma outra aplicação (Classe) que instancie quatro objetos do 
+tipo Computador, preencha os atributos com dados solicitados ao 
+usuário e ao final exiba todos os atributos dos quatro objetos 
+criados invocando o método imprimir. Para criar os quatro 
+objetos, com a metade utilize o construtor default, e com a outra 
+metade utilize o construtor que recebe todos os atributos. 
+ 
+ 
+ 
+Código class AV1(Main/Principal) 
+/** 
+* 
+*interface 
+*/ 
+public class AV1 { 
+    public static void main(String[] args) { 
+        Computador computador1 = new Computador("Ti2000", 2000, 8, 2, 250); 
+        Computador computador2 = new Computador("Gx8000", 7500, 32, 6, 1000); 
+        Computador computador3 = new Computador(); 
+        Computador computador4 = new Computador(); 
+        computador1.Imprimir(); 
+        computador2.Imprimir(); 
+        computador3.Imprimir(); 
+        computador4.Imprimir(); 
+    } 
+} 
+ 
+Código class Computador(Métodos) 
+public class Computador { 
+    public String modelo; 
+    public int valor; 
+    public int memoria; 
+    public int fans; 
+    public int hd; 
+    public Computador() { 
+        this.modelo = "A2000"; 
+        this.valor = 3500; 
+        this.memoria = 16; 
+        this.fans = 4; 
+        this.hd = 500; 
+    } 
+ 
+    public Computador(String modelo, int valor, int memoria, int fans, int hd) { 
+        this.modelo = modelo; 
+        this.valor = valor; 
+        this.memoria = memoria; 
+        this.fans = fans; 
+        this.hd = hd; 
+    } 
+    public String getModelo() { 
+        return modelo; 
+    } 
+    public int getValor() { 
+        return valor; 
+    } 
+    public int getMemoria() { 
+        return memoria; 
+    } 
+    public int getFans() { 
+        return fans; 
+    } 
+    public int getHd() { 
+        return hd; 
+    } 
+ 
+    public void setModelo(String m) { 
+        if (!m.isEmpty()) { 
+            modelo = m; 
+        }  
+                else { 
+                    System.out.println("valor inválido, não foi atribuído"); 
+        } 
+    } 
+ 
+    public void setValor(int v) { 
+        if (v >= 0) { 
+            valor = v; 
+        } 
+                else { 
+                    System.out.println("valor inválido, não foi atribuído"); 
+        } 
+    } 
+ 
+    public void setMemoria(int ram) { 
+        if (ram == 2 || ram == 4 || ram == 8 || ram == 16 || ram == 32) { 
+            memoria = ram; 
+        }  
+                else { 
+                    System.out.println("valor inválido, não foi atribuído"); 
+        } 
+    } 
+ 
+    public void setFans(int n) { 
+        if (n >= 0) { 
+            fans = n; 
+        }  
+                else { 
+                    System.out.println("valor inválido, não foi atribuído"); 
+        } 
+    } 
+ 
+    public void setGbHd(int h) { 
+        if (h == 250 || h == 500 || h == 1000) { 
+            hd = h; 
+        }  
+                else { 
+                    System.out.println("valor inválido, não foi atribuído"); 
+        } 
+    } 
+ 
+    public void Imprimir() { 
+        System.out.println("Modelo do computador " + modelo); 
+        System.out.println("Valor do computador R$" + valor); 
+        System.out.println("Quantidade de memoria do computador " + memoria + "gbs 
+de ram"); 
+        System.out.println("Quantas fans vem no gabinete do computador " + fans); 
+        System.out.println("Quanto de espaco no hd " + hd + "gbs"); 
+System.out.println(""); 
+System.out.println(""); 
+} 
+} 
+
+Resultado do programa: 
+
+run: 
+Modelo do computador Ti2000 
+Valor do computador R$2000 
+Quantidade de memoria do computador 8gbs de RAM 
+Quantas fans vem no gabinete do computador 2 
+Quanto de espaco no hd 250gbs 
+
+
+Modelo do computador Gx8000 
+Valor do computador R$7500 
+Quantidade de memoria do computador 32gbs de RAM 
+Quantas fans vem no gabinete do computador 6 
+Quanto de espaco no hd 1000gbs 
+
+
+Modelo do computador A2000 
+Valor do computador R$3500 
+Quantidade de memoria do computador 16gbs de RAM 
+Quantas fans vem no gabinete do computador 4 
+Quanto de espaco no hd 500gbs 
+
+
+Modelo do computador A2000 
+Valor do computador R$3500 
+Quantidade de memoria do computador 16gbs de RAM 
+Quantas fans vem no gabinete do computador 4 
+Quanto de espaco no hd 500gbs 
+
+
+BUILD SUCCESSFUL (total time: 0 seconds)
