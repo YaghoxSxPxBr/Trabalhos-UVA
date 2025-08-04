@@ -27,7 +27,10 @@ uma thread diferente.
 funcionamento incorreto do sistema.
  Elabore um documento texto em formato PDF contendo:
  IMPORTANTE: A solução não pode alterar a ordem de execução dos procedimentos 
-“processa_algo_utilizando_xxxxxxxx()”, pois isso afetaria o funcionamento do algoritmo.--------
+“processa_algo_utilizando_xxxxxxxx()”, pois isso afetaria o funcionamento do algoritmo.
+
+----------------------------------------------------------------------------------------
+
 Algoritmo “concorrentes”
  Var
   // Variaveis de controle das threads
@@ -45,6 +48,7 @@ causa o deadlock.
          libera_plotter();
   Fim Enquanto;
  Fim;
+
  Procedimento Proc_B()  Enquanto o scanner não for liberado a impressora e o plotter serão 
 bloqueados
  Início
@@ -61,6 +65,7 @@ bloqueados
          libera_scanner();
   Fim Enquanto;
  Fim;
+
  Procedimento Proc_C()    Na alocação da impressora e processo não é possível alocar o scanner 
 sem liberar a impressora 
 A ordem de alocação dos recursos nas threads B e C é diferente, o que pode levar a uma situação de 
@@ -76,6 +81,7 @@ espera circular e causar deadlock.
          libera_scanner();
   Fim Enquanto;
  Fim;
+
 Início
   sema_impressora = 1; // Inicia semaforo de controle da impressora
   sema_plotter = 1; // Inicia semaforo de controle do plotter
@@ -89,6 +95,7 @@ Início
   pthread_join(thread_B);
   pthread_join(thread_C);
  Fim.
+
 Resposta
  Todos os recursos são não preemptivos então já que todos os processos (ABC) acontecem 
 simultaneamente ocorrem um cruzamento ocasionado num deadlock já que uma hora vão todos ter 
@@ -97,6 +104,7 @@ de esperar a liberação de um recurso que está sendo utilizado por outro sem l
 Pelos recursos serem não preemptivo não se pode usar preempção. Ignorar o problema tiraria o 
 propósito da atividade assim como eliminar um dos processos. Rollback funcionaria mais teria 
 muita perda por ter de parar e voltar atrás no processo.
+
  Proposta de Correção:
  Aquisição de mais recursos que evitaria a exclusão mutua
  Modificar a lógica de alocação e liberação de recursos para garantir que os recursos sejam 
