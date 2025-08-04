@@ -1,0 +1,15 @@
+Algorítimo pseudocódigo idade media de uma família.
+
+ Var Quantidade, X, IdadeT, Idade, IdadeM
+ Início.
+ IdadeT = 0
+ Escreva “Qual o número de membros da família”.
+ Leia Quantidade.
+ Para X=0 até X<Quantidade faça
+ Escreva “Digite a idade do membro da família”.
+ Leia Idade.
+ IdadeT= IdadeT + Idade.
+ Fim Para.
+ IdadeM = IdadeT / Quantidade.
+ Escreva " A idade média da sua família é: IdadeM" .
+ Fim Algoritimo.
